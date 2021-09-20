@@ -1,0 +1,7 @@
+@(product: Product)
+
+<li></li>
+<b>@product.name</b>
+@product.description
+<a href="@controllers.routes.HomeController.index">Index</a><br>
+<a href="@controllers.routes.ProductController.getProducts">Products</a>
