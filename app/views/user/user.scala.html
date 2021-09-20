@@ -1,0 +1,7 @@
+@import models.user.User
+@(user: User)
+
+<li></li>
+<b>@user.email</b>
+<a href="@controllers.routes.HomeController.index">Index</a><br>
+<a href="@controllers.routes.UserController.getUsers">Users</a>

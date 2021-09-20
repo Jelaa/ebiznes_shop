@@ -1,4 +1,4 @@
-package models
+package models.category
 
 import play.api.libs.json._
 

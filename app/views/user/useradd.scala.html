@@ -1,0 +1,17 @@
+@(user: Form[CreateUserForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(controllers.routes.UserController.addHandle) {
+    @helper.CSRF.formField
+    @inputText(user("email"))
+
+    <div class="buttons">
+        <input type="submit" value="Add User"/>
+    </div>
+} <br>
+<a href="@controllers.routes.HomeController.index">Index</a>
+<br>
+<a href="@controllers.routes.UserController.getUsers">Users</a>

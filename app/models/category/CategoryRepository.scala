@@ -1,9 +1,10 @@
-package models
+package models.category
 
-import javax.inject.{Inject, Singleton}
+import models.category.Category
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

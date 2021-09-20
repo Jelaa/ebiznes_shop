@@ -34,7 +34,14 @@ INSERT INTO "product"(name, description, category)
 VALUES ('Furniture2', 'FurnitureDescription2',
         (SELECT id FROM category WHERE name = 'furniture'));
 
+INSERT INTO "user"(email)
+VALUES ('ola@gmail.com');
+
 # --- !Downs
+
+DELETE
+FROM user
+WHERE email = 'ola@gmail.com';
 
 DELETE
 FROM product

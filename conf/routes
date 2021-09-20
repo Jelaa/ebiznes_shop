@@ -5,14 +5,25 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
+
+# Product routes
 GET     /addproduct                 controllers.ProductController.addProduct
 POST    /addproducthandle           controllers.ProductController.addProductHandle
 GET     /updateproduct/:id          controllers.ProductController.updateProduct(id: Long)
 POST    /updateproducthandle        controllers.ProductController.updateProductHandle
-
 GET     /products                   controllers.ProductController.getProducts
 GET     /product/:id                controllers.ProductController.getProduct(id: Long)
-GET     /delete/:id                 controllers.ProductController.delete(id: Long)
+GET     /deleteproduct/:id          controllers.ProductController.delete(id: Long)
+
+# User routes
+GET     /adduser                    controllers.UserController.addUser
+POST    /adduserhandle              controllers.UserController.addUserHandle
+GET     /updateuser/:id             controllers.UserController.updateUser(id: Long)
+POST    /updateuserhandle           controllers.UserController.updateUserHandle
+GET     /users                      controllers.UserController.getUsers
+GET     /user/:id                   controllers.UserController.getUser(id: Long)
+GET     /deleteuser/:id             controllers.UserController.delete(id: Long)
+
 # An example controller showing how to use dependency injection
 GET     /count                      controllers.CountController.count
 # An example controller showing how to write asynchronous code

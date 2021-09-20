@@ -1,4 +1,4 @@
-package models
+package models.product
 
 import play.api.libs.json.Json
 

@@ -1,10 +1,13 @@
 package controllers
 
+import models.category.{Category, CategoryRepository}
+import models.product._
+
 import javax.inject._
-import models.{Category, CategoryRepository, Product, ProductRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 /**

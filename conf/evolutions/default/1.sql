@@ -15,7 +15,14 @@ CREATE TABLE "product"
     FOREIGN KEY (category) references category (id)
 );
 
+CREATE TABLE "user"
+(
+    "id"          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "email"       VARCHAR NOT NULL
+);
+
 # --- !Downs
 
+DROP TABLE "user";
 DROP TABLE "product";
 DROP TABLE "category";
