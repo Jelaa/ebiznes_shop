@@ -1,7 +1,8 @@
-package models.user
+package models
 
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
+
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -12,31 +13,31 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
   import dbConfig._
   import profile.api._
 
-  val user = TableQuery[UserTable]
+  val userTable = TableQuery[UserTable]
 
   def create(email: String): Future[User] = db.run {
-    (user.map(u => (u.email))
-      returning user.map(_.id)
+    (userTable.map(u => (u.email))
+      returning userTable.map(_.id)
       into ((name, id) => User(id, email))
       ) += (email)
   }
 
   def list(): Future[Seq[User]] = db.run {
-    user.result
+    userTable.result
   }
   def getById(id: Long): Future[User] = db.run {
-    user.filter(_.id === id).result.head
+    userTable.filter(_.id === id).result.head
   }
 
   def getByIdOption(id: Long): Future[Option[User]] = db.run {
-    user.filter(_.id === id).result.headOption
+    userTable.filter(_.id === id).result.headOption
   }
 
-  def delete(id: Long): Future[Unit] = db.run(user.filter(_.id === id).delete).map(_ => ())
+  def delete(id: Long): Future[Unit] = db.run(userTable.filter(_.id === id).delete).map(_ => ())
 
   def update(id: Long, new_user: User): Future[Unit] = {
     val userToUpdate: User = new_user.copy(id)
-    db.run(user.filter(_.id === id).update(userToUpdate)).map(_ => ())
+    db.run(userTable.filter(_.id === id).update(userToUpdate)).map(_ => ())
   }
 
   class UserTable(tag: Tag) extends Table[User](tag, "user") {

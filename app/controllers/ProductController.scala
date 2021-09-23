@@ -1,8 +1,6 @@
 package controllers
 
-import models.category.{Category, CategoryRepository}
-import models.product._
-
+import models._
 import javax.inject._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -22,7 +20,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, categoryRepo:
     mapping(
       "name" -> nonEmptyText,
       "description" -> nonEmptyText,
-      "category" -> number,
+      "category" -> longNumber,
     )(CreateProductForm.apply)(CreateProductForm.unapply)
   }
 
@@ -31,7 +29,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, categoryRepo:
       "id" -> longNumber,
       "name" -> nonEmptyText,
       "description" -> nonEmptyText,
-      "category" -> number,
+      "category" -> longNumber,
     )(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
 
@@ -56,7 +54,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, categoryRepo:
     }
     val produkt = productsRepo.getById(id)
     produkt.map(product => {
-      val prodForm = updateProductForm.fill(UpdateProductForm(product.id, product.name, product.description,product.category))
+      val prodForm = updateProductForm.fill(UpdateProductForm(product.id, product.name, product.description, product.category))
       Ok(views.html.product.productupdate(prodForm, categ))
     })
   }
@@ -89,7 +87,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, categoryRepo:
 
   def addProductHandle: Action[AnyContent] = Action.async { implicit request =>
     var categ:Seq[Category] = Seq[Category]()
-    val categories = categoryRepo.list().onComplete{
+    val categories: Unit = categoryRepo.list().onComplete{
       case Success(cat) => categ = cat
       case Failure(_) => print("fail")
     }
@@ -115,5 +113,5 @@ class ProductController @Inject()(productsRepo: ProductRepository, categoryRepo:
   }
 }
 
-case class CreateProductForm(name: String, description: String, category: Int)
-case class UpdateProductForm(id: Long, name: String, description: String, category: Int)
+case class CreateProductForm(name: String, description: String, category: Long)
+case class UpdateProductForm(id: Long, name: String, description: String, category: Long)

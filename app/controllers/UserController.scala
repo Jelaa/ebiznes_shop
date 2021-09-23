@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.user._
+import models._
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
@@ -35,7 +35,7 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
     val user = usersRepo.getByIdOption(id)
     user.map {
       case Some(u) => Ok(views.html.user.user(u))
-      case None => Redirect(routes.UserController.getUsers)
+      case None => Redirect(controllers.routes.UserController.getUsers)
     }
   }
 
@@ -56,7 +56,7 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
       },
       user => {
         usersRepo.update(user.id, User(user.id, user.email)).map { _ =>
-          Redirect(routes.UserController.updateUser(user.id)).flashing("success" -> "user updated")
+          Redirect(controllers.routes.UserController.updateUser(user.id)).flashing("success" -> "user updated")
         }
       }
     )
@@ -76,7 +76,7 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
       },
       user => {
         usersRepo.create(user.email).map { _ =>
-          Redirect(routes.UserController.addUser).flashing("success" -> "product.created")
+          Redirect(controllers.routes.UserController.addUser).flashing("success" -> "product.created")
         }
       }
     )
@@ -84,7 +84,7 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
 
   def delete(id: Long): Action[AnyContent] = Action.async {
     usersRepo.delete(id)
-      .map(_ => Redirect(routes.UserController.getUsers))
+      .map(_ => Redirect(controllers.routes.UserController.getUsers))
   }
 }
 

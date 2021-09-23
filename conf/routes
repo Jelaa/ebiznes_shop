@@ -15,6 +15,15 @@ GET     /products                   controllers.ProductController.getProducts
 GET     /product/:id                controllers.ProductController.getProduct(id: Long)
 GET     /deleteproduct/:id          controllers.ProductController.delete(id: Long)
 
+# Category routes
+GET     /addcategory                 controllers.CategoryController.addCategory
+POST    /addcategoryhandle           controllers.CategoryController.addCategoryHandle
+GET     /updatecategory/:id          controllers.CategoryController.updateCategory(id: Long)
+POST    /updatecategoryhandle        controllers.CategoryController.updateCategoryHandle
+GET     /categories                  controllers.CategoryController.getCategories
+GET     /category/:id                controllers.CategoryController.getCategory(id: Long)
+GET     /deletecategory/:id          controllers.CategoryController.delete(id: Long)
+
 # User routes
 GET     /adduser                    controllers.UserController.addUser
 POST    /adduserhandle              controllers.UserController.addUserHandle
@@ -24,10 +33,6 @@ GET     /users                      controllers.UserController.getUsers
 GET     /user/:id                   controllers.UserController.getUser(id: Long)
 GET     /deleteuser/:id             controllers.UserController.delete(id: Long)
 
-# An example controller showing how to use dependency injection
-GET     /count                      controllers.CountController.count
-# An example controller showing how to write asynchronous code
-GET     /message                    controllers.AsyncController.message
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
