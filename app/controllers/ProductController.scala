@@ -1,6 +1,8 @@
 package controllers
 
 import models._
+import models.repository._
+
 import javax.inject._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -34,7 +36,7 @@ class ProductController @Inject()(productsRepo: ProductRepository, categoryRepo:
   }
 
   def getProducts: Action[AnyContent] = Action.async { implicit request =>
-    val productsList = productsRepo.list()
+    val productsList = productsRepo.getAll
     productsList.map( products => Ok(views.html.product.products(products)))
   }
 
@@ -47,64 +49,52 @@ class ProductController @Inject()(productsRepo: ProductRepository, categoryRepo:
   }
 
   def updateProduct(id: Long): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    var categ:Seq[Category] = Seq[Category]()
-    val categories = categoryRepo.list().onComplete{
-      case Success(cat) => categ = cat
-      case Failure(_) => print("fail")
-    }
-    val produkt = productsRepo.getById(id)
-    produkt.map(product => {
-      val prodForm = updateProductForm.fill(UpdateProductForm(product.id, product.name, product.description, product.category))
-      Ok(views.html.product.productupdate(prodForm, categ))
+    categoryRepo.getAll.flatMap(categories => {
+      productsRepo.getById(id).map(product => {
+        val prodForm = updateProductForm.fill(UpdateProductForm(id, product.name, product.description, product.category.id))
+        Ok(views.html.product.productupdate(prodForm, categories))
+      })
     })
   }
 
   def updateProductHandle: Action[AnyContent] = Action.async { implicit request =>
-    var categ:Seq[Category] = Seq[Category]()
-    val categories = categoryRepo.list().onComplete{
-      case Success(cat) => categ = cat
-      case Failure(_) => print("fail")
-    }
-    updateProductForm.bindFromRequest.fold(
-      errorForm => {
-        Future.successful(
-          BadRequest(views.html.product.productupdate(errorForm, categ))
-        )
-      },
-      product => {
-        productsRepo.update(product.id, Product(product.id, product.name, product.description, product.category)).map { _ =>
-          Redirect(routes.ProductController.updateProduct(product.id)).flashing("success" -> "product updated")
+    categoryRepo.getAll.flatMap(categories => {
+      updateProductForm.bindFromRequest.fold(
+        errorForm => {
+          Future.successful(
+            BadRequest(views.html.product.productupdate(errorForm, categories))
+          )
+        },
+        product => {
+          productsRepo.update(product.id, Product(product.id, product.name, product.description, product.category))
+            .map {_ =>
+            Redirect(routes.ProductController.updateProduct(product.id)).flashing("success" -> "product updated")
+          }
         }
-      }
-    )
-
+      )
+    })
   }
 
   def addProduct: Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
-    val categories = categoryRepo.list()
+    val categories = categoryRepo.getAll
     categories.map(cat => Ok(views.html.product.productadd(productForm, cat)))
   }
 
   def addProductHandle: Action[AnyContent] = Action.async { implicit request =>
-    var categ:Seq[Category] = Seq[Category]()
-    val categories: Unit = categoryRepo.list().onComplete{
-      case Success(cat) => categ = cat
-      case Failure(_) => print("fail")
-    }
-
-    productForm.bindFromRequest.fold(
-      errorForm => {
-        Future.successful(
-          BadRequest(views.html.product.productadd(errorForm, categ))
-        )
-      },
-      product => {
-        productsRepo.create(product.name, product.description, product.category).map { _ =>
-          Redirect(routes.ProductController.addProduct).flashing("success" -> "product.created")
+    categoryRepo.getAll.flatMap(categories => {
+      productForm.bindFromRequest.fold(
+        errorForm => {
+          Future.successful(
+            BadRequest(views.html.product.productadd(errorForm, categories))
+          )
+        },
+        product => {
+          productsRepo.create(product.name, product.description, product.category).map { _ =>
+            Redirect(routes.ProductController.addProduct).flashing("success" -> "product.created")
+          }
         }
-      }
-    )
-
+      )
+    })
   }
 
   def delete(id: Long): Action[AnyContent] = Action.async {

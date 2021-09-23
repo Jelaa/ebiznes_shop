@@ -1,4 +1,5 @@
-@(products: Seq[Product])
+@import models.repository.ProductDto
+@(products: Seq[ProductDto])
 <h2>PRODUCTS</h2>
 @for(product <- products) {
     <b>@product.name</b>

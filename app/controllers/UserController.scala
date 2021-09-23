@@ -1,11 +1,13 @@
 package controllers
 
 import javax.inject._
-import models._
+import models.User
+import models.repository.{UserRepository, UserDto}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
 
+import com.mohiva.play.silhouette.api.{Identity, LoginInfo}
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
@@ -16,6 +18,8 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
   val userForm: Form[CreateUserForm] = Form {
     mapping(
       "email" -> email,
+      "providerId" -> nonEmptyText,
+      "providerKey" -> nonEmptyText
     )(CreateUserForm.apply)(CreateUserForm.unapply)
   }
 
@@ -23,11 +27,13 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
     mapping(
       "id" -> longNumber,
       "email" -> email,
+      "providerId" -> nonEmptyText,
+      "providerKey" -> nonEmptyText
     )(UpdateUserForm.apply)(UpdateUserForm.unapply)
   }
 
   def getUsers: Action[AnyContent] = Action.async { implicit request =>
-    val usersList = usersRepo.list()
+    val usersList = usersRepo.getAll
     usersList.map( users => Ok(views.html.user.users(users)))
   }
 
@@ -42,7 +48,7 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
   def updateUser(id: Long): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     val user = usersRepo.getById(id)
     user.map(u => {
-      val userForm = updateUserForm.fill(UpdateUserForm(u.id, u.email))
+      val userForm = updateUserForm.fill(UpdateUserForm(u.id, u.email, u.providerId, u.providerKey))
       Ok(views.html.user.userupdate(userForm))
     })
   }
@@ -55,7 +61,7 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
         )
       },
       user => {
-        usersRepo.update(user.id, User(user.id, user.email)).map { _ =>
+        usersRepo.update(user.id, UserDto(user.id, user.email, user.providerId, user.providerKey)).map { _ =>
           Redirect(controllers.routes.UserController.updateUser(user.id)).flashing("success" -> "user updated")
         }
       }
@@ -75,7 +81,7 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
         )
       },
       user => {
-        usersRepo.create(user.email).map { _ =>
+        usersRepo.create(user.providerKey, user.providerId, user.email).map { _ =>
           Redirect(controllers.routes.UserController.addUser).flashing("success" -> "product.created")
         }
       }
@@ -88,5 +94,5 @@ class UserController @Inject()(usersRepo: UserRepository, cc: MessagesController
   }
 }
 
-case class CreateUserForm(email: String)
-case class UpdateUserForm(id: Long, email: String)
+case class CreateUserForm(email: String, providerId: String, providerKey : String)
+case class UpdateUserForm(id: Long, email: String, providerId: String, providerKey : String)

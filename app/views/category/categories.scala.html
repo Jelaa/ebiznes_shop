@@ -1,4 +1,5 @@
-@(categories: Seq[Category])
+@import models.repository.CategoryDto
+@(categories: Seq[CategoryDto])
 <h2>CATEGORY</h2>
 @for(category <- categories) {
     <b>@category.name</b>

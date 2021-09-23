@@ -1,4 +1,5 @@
-@(product: Form[UpdateProductForm],category: Seq[Category])(implicit request: MessagesRequestHeader, flash: Flash)
+@import models.repository.CategoryDto
+@(product: Form[UpdateProductForm],category: Seq[CategoryDto])(implicit request: MessagesRequestHeader, flash: Flash)
 
 @import helper._
 

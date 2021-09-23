@@ -1,6 +1,7 @@
 package controllers
 
-import models._
+import models.repository.CategoryRepository
+import models.Category
 import javax.inject._
 import play.api.data.Form
 import play.api.data.Forms._
@@ -27,7 +28,7 @@ class CategoryController @Inject()(categoryRepo: CategoryRepository, cc: Message
   }
 
   def getCategories: Action[AnyContent] = Action.async { implicit request =>
-    val categories = categoryRepo.list()
+    val categories = categoryRepo.getAll
     categories.map(c => Ok(views.html.category.categories(c)))
   }
 

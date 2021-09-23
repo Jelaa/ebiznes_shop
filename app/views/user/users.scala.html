@@ -1,4 +1,5 @@
-@(users: Seq[User])
+@import models.repository.UserDto
+@(users: Seq[UserDto])
 <h2>USERS</h2>
 @for(user <- users) {
     <b>@user.email</b>

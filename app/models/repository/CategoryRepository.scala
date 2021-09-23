@@ -1,5 +1,6 @@
-package models
+package models.repository
 
+import models.Category
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 
@@ -28,23 +29,43 @@ class CategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
       ) += (name)
   }
 
-  def list(): Future[Seq[Category]] = db.run {
-    categoryTable.result
+
+  def getAll: Future[Seq[CategoryDto]] = db.run {
+    categoryTable.result.map(_.toStream
+      .map(CategoryDto.apply)
+      .toSeq)
   }
 
-  def getById(id: Long): Future[Category] = db.run {
+
+  def getById(id: Long): Future[CategoryDto] = db.run {
     categoryTable.filter(_.id === id).result.head
+      .map(CategoryDto.apply)
   }
 
-  def getByIdOption(id: Long): Future[Option[Category]] = db.run {
+
+  def getByIdOption(id: Long): Future[Option[CategoryDto]] = db.run {
     categoryTable.filter(_.id === id).result.headOption
+      .map {
+        case Some(c) => Some(CategoryDto(c))
+        case None => None
+      }
   }
 
-  def delete(id: Long): Future[Unit] = db.run(categoryTable.filter(_.id === id).delete).map(_ => ())
 
   def update(id: Long, new_category: Category): Future[Unit] = {
     val categoryToUpdate: Category = new_category.copy(id)
-    db.run(categoryTable.filter(_.id === id).update(categoryToUpdate)).map(_ => ())
+    db.run {
+      categoryTable.filter(_.id === id)
+        .update(categoryToUpdate)
+        .map(_ => ())
+    }
   }
+
+  def delete(id: Long): Future[Unit] =
+    db.run {
+      categoryTable.filter(_.id === id)
+        .delete
+        .map(_ => ())
+    }
 }
 

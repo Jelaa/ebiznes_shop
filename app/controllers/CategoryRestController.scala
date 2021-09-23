@@ -3,7 +3,8 @@ package controllers
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc._
-import models.{Category, CategoryRepository}
+import models.Category
+import models.repository.CategoryRepository
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -11,12 +12,15 @@ import scala.concurrent.{ExecutionContext, Future}
 class CategoryRestController @Inject()(categoryRepo: CategoryRepository, cc: ControllerComponents)
                                       (implicit ec: ExecutionContext) extends AbstractController(cc) {
 
-  def getCategories: Action[AnyContent] = Action.async { implicit request =>
-    val categories = categoryRepo.list()
+  implicit val createFormatter: OFormat[CreateCategory] = Json.format[CreateCategory]
+  implicit val updateFormatter: OFormat[UpdateCategory] = Json.format[UpdateCategory]
+
+  def getCategories = Action.async { implicit request =>
+    val categories = categoryRepo.getAll
     categories.map(c => Ok(Json.toJson(c)))
   }
 
-  def getCategory(id: Long): Action[AnyContent] = Action.async { implicit request =>
+  def getCategory(id: Long) = Action.async { implicit request =>
     categoryRepo.getByIdOption(id)
       .map {
         case Some(c) => Ok(Json.toJson(c))
@@ -24,27 +28,26 @@ class CategoryRestController @Inject()(categoryRepo: CategoryRepository, cc: Con
       }
   }
 
-  def updateCategory(id: Long): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
+  def updateCategory(id: Long) = Action.async { implicit request =>
     val requestJson = request.body.asJson
     val requestBody = requestJson.flatMap(Json.fromJson[UpdateCategory](_).asOpt)
     requestBody match {
       case Some(categoryToUpdate) =>
-        categoryRepo.update(id, categoryToUpdate.name).map(_ => Ok)
+        categoryRepo.update(id, Category(id, categoryToUpdate.name)).map(_ => Ok)
       case None => Future(BadRequest)}
   }
 
-  def addCategory: Action[AnyContent] = Action { implicit request: MessagesRequest[AnyContent] =>
+  def addCategory = Action.async { implicit request =>
     val requestJson = request.body.asJson
     val requestBody = requestJson.flatMap(Json.fromJson[CreateCategory](_).asOpt)
     requestBody match {
-      case Some(newItem) =>
-        categoryRepo.create(newItem.name)
+      case Some(newCategory) =>
+        categoryRepo.create(newCategory.name)
           .map(c => Created(Json.toJson(c)))
       case None =>
         Future(BadRequest)
     }
   }
-
 
   def delete(id: Long): Action[AnyContent] = Action.async {
     categoryRepo.delete(id)
