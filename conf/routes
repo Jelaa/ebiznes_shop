@@ -33,6 +33,11 @@ GET     /users                      controllers.UserController.getUsers
 GET     /user/:id                   controllers.UserController.getUser(id: Long)
 GET     /deleteuser/:id             controllers.UserController.delete(id: Long)
 
+# Authentication
+POST    /signUp                     controllers.auth.SignUpController.signUp
+POST    /signIn                     controllers.auth.SignInController.signIn
+POST    /signOut                    controllers.auth.SignInController.signOut
+GET     /authenticate/:provider     controllers.auth.SocialAuthController.authenticate(provider: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

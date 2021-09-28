@@ -52,10 +52,6 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, val
         .toList)
   }
 
-  /*def getByCategory(category_id: Long): Future[Seq[Product]] = db.run {
-    productTable.filter(_.category === category_id).result
-  }*/
-
   def getById(id: Long): Future[ProductDto] = db.run {
     val joinQuery = for {
       (product, category) <- productTable join categoryTable on (_.category === _.id)

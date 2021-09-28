@@ -1,7 +1,30 @@
 @import models.repository.CategoryDto
 @(category: CategoryDto)
 
-<li></li>
-<b>@category.name</b>
-<a href="@controllers.routes.HomeController.index">Index</a><br>
-<a href="@controllers.routes.CategoryController.getCategories">Categories</a>
+<style>
+        table, th, td {
+            border:1px solid black;
+        }
+</style>
+<body>
+
+    <h2>CATEGORY</h2>
+
+    <table style="width:100%">
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr>
+            <td>@category.id</td>
+            <td>@category.name</td>
+            <td><a href="@controllers.routes.CategoryController.updateCategory(category.id)">Edit</a></td>
+            <td><a href="@controllers.routes.CategoryController.delete(category.id)">Delete</a></td>
+        </tr>
+    </table><br>
+
+    <a href="@controllers.routes.HomeController.index">Index</a><br>
+    <a href="@controllers.routes.CategoryController.getCategories">Categories</a>
+</body>

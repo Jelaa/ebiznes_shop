@@ -1,8 +1,35 @@
 @import models.repository.ProductDto
 @(product: ProductDto)
 
-<li></li>
-<b>@product.name</b>
-@product.description
-<a href="@controllers.routes.HomeController.index">Index</a><br>
-<a href="@controllers.routes.ProductController.getProducts">Products</a>
+<style>
+        table, th, td {
+            border:1px solid black;
+        }
+</style>
+<body>
+
+    <h2>PRODUCT</h2>
+
+    <table style="width:100%">
+        <tr>
+            <th>Id</th>
+            <th>Category</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr>
+            <td>@product.id</td>
+            <td>@product.category.name</td>
+            <td>@product.name</td>
+            <td>@product.description</td>
+            <td><a href="@controllers.routes.ProductController.updateProduct(product.id)">Edit</a></td>
+            <td><a href="@controllers.routes.ProductController.delete(product.id)">Delete</a></td>
+        </tr>
+    </table><br>
+
+    <a href="@controllers.routes.HomeController.index">Index</a><br>
+    <a href="@controllers.routes.ProductController.getProducts">Products</a>
+</body>
+

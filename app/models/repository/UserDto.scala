@@ -8,6 +8,6 @@ case class UserDto(id: Long, email: String, providerId : String, providerKey : S
 object UserDto {
   implicit val userDtoFormat: OFormat[UserDto] = Json.format[UserDto]
 
-  def toDto(user : User): UserDto =
+  def apply(user : User): UserDto =
     UserDto(user.id, user.email, user.loginInfo.providerID, user.loginInfo.providerKey)
 }

@@ -1,7 +1,34 @@
 @import models.repository.UserDto
 @(user: UserDto)
 
-<li></li>
-<b>@user.email</b>
-<a href="@controllers.routes.HomeController.index">Index</a><br>
-<a href="@controllers.routes.UserController.getUsers">Users</a>
+<style>
+        table, th, td {
+            border:1px solid black;
+        }
+</style>
+<body>
+
+    <h2>USER</h2>
+
+    <table style="width:100%">
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Provider id</th>
+            <th>Provider key</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        <tr>
+            <td>@user.id</td>
+            <td>@user.email</td>
+            <td>@user.providerId</td>
+            <td>@user.providerKey</td>
+            <td><a href="@controllers.routes.UserController.updateUser(user.id)">Edit</a></td>
+            <td><a href="@controllers.routes.UserController.delete(user.id)">Delete</a></td>
+        </tr>
+        </table><br>
+
+    <a href="@controllers.routes.HomeController.index">Index</a><br>
+    <a href="@controllers.routes.UserController.getUsers">Users</a>
+</body>

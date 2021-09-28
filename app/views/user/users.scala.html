@@ -1,12 +1,40 @@
 @import models.repository.UserDto
-@(users: Seq[UserDto])
-<h2>USERS</h2>
-@for(user <- users) {
-    <b>@user.email</b>
-    <a href="@controllers.routes.UserController.getUser(user.id)">View</a>
-    <a href="@controllers.routes.UserController.updateUser(user.id)">Edit</a>
-    <a href="@controllers.routes.UserController.delete(user.id)">Delete</a>
-    <br>
-}
-<a href="@controllers.routes.UserController.addUser">Add user</a><br>
-<a href="@controllers.routes.HomeController.index">Index</a>
+@(users: List[UserDto])
+
+<style>
+        table, th, td {
+            border:1px solid black;
+        }
+</style>
+<body>
+
+    <h2>USERS</h2>
+
+    <table style="width:100%">
+        <tr>
+            <th>Id</th>
+            <th>Email</th>
+            <th>Provider id</th>
+            <th>Provider key</th>
+            <th>Details</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @for(user <- users) {
+            <tr>
+                <td>@user.id</td>
+                <td>@user.email</td>
+                <td>@user.providerId</td>
+                <td>@user.providerKey</td>
+                <td><a href="@controllers.routes.UserController.getUser(user.id)">View</a></td>
+                <td><a href="@controllers.routes.UserController.updateUser(user.id)">Edit</a></td>
+                <td><a href="@controllers.routes.UserController.delete(user.id)">Delete</a></td>
+            </tr>
+        }
+    </table><br>
+
+    <a href="@controllers.routes.UserController.addUser">Add new user</a> <br>
+    <a href="@controllers.routes.HomeController.index">Index</a>
+</body>
+
+
