@@ -25,8 +25,8 @@ class SignUpController @Inject()(components: DefaultSilhouetteControllerComponen
       case None =>
         val authInfo = passwordHasherRegistry.current.hash(signUpRequest.password)
         userRepository.create(
-          CredentialsProvider.ID,
           signUpRequest.email,
+          CredentialsProvider.ID,
           signUpRequest.email
         ).flatMap { user =>
           authInfoRepository.add(loginInfo, authInfo)
