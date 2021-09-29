@@ -1,0 +1,18 @@
+version: '3'
+services:
+  backend:
+    build: .
+    ports:
+      - 12345:9000
+    volumes:
+      - ./ebiznes_shop:/home/jela/shop/backend
+    working_dir: /home/jela/shop/backend
+    command: bash -c "source /home/jela/.sdkman/bin/sdkman-init.sh && sbt run"
+  frontend:
+    build: .
+    ports:
+      - 12346:3000
+    volumes:
+      - ./frontend:/home/jela/shop/frontend
+    working_dir: /home/jela/shop/frontend
+    command: bash -c "npm install --save && npm start"
