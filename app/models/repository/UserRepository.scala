@@ -38,7 +38,10 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
       .filter(_.providerKey === loginInfo.providerKey)
       .result
       .headOption
-  }.map(_.map(User.apply))
+  }.map(x => {
+  System.out.println(x)
+  x.map(User.apply)
+})
 
   def create(email: String, providerId: String, providerKey: String): Future[UserDto] = {
     db.run(

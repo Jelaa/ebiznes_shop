@@ -122,9 +122,8 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     ClassTag[PasswordInfo](PasswordInfo.getClass)
 
   @Provides
-  def provideSocialProviderRegistry(googleProvider: GoogleProvider,
-                                    facebookProvider: FacebookProvider): SocialProviderRegistry =
-    SocialProviderRegistry(Seq(googleProvider, facebookProvider))
+  def provideSocialProviderRegistry(googleProvider: GoogleProvider): SocialProviderRegistry =
+    SocialProviderRegistry(Seq(googleProvider))
 
   @Provides
   def provideGoogleProvider(httpLayer: HTTPLayer,
@@ -132,11 +131,6 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
                             configuration: Configuration): GoogleProvider =
     new GoogleProvider(httpLayer, socialStateHandler, configuration.underlying.as[OAuth2Settings]("silhouette.google"))
 
-  @Provides
-  def provideFacebookProvider(httpLayer: HTTPLayer,
-                              socialStateHandler: SocialStateHandler,
-                              configuration: Configuration): FacebookProvider =
-    new FacebookProvider(httpLayer, socialStateHandler, configuration.underlying.as[OAuth2Settings]("silhouette.facebook"))
 
   @Provides
   def provideSocialStateHandler(@Named("social-state-signer") signer: Signer,
