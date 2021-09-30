@@ -36,6 +36,17 @@ function postCall(url, data = {}, headers = {}) {
     return axios.post(fullUrl, data, config)
 }
 
+export const getProducts = () => {
+    return getCall("/rest/product")
+}
+
+function getCall(url, headers = {}) {
+    const fullUrl = buildUrl(url)
+    const allHeaders = buildHeadersWithCsrfToken(headers)
+    const config = buildConfigWithHeaders(allHeaders)
+    return axios.get(fullUrl, config)
+}
+
 function buildUrl(url) {
     return BACKEND_BASE_URL + url
 }

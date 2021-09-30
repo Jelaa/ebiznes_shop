@@ -15,6 +15,13 @@ GET     /products                   controllers.ProductController.getProducts
 GET     /product/:id                controllers.ProductController.getProduct(id: Long)
 GET     /deleteproduct/:id          controllers.ProductController.delete(id: Long)
 
+# Product REST routes
+GET     /rest/product               controllers.ProductRestController.getProducts
+GET     /rest/product/:id           controllers.ProductRestController.getProduct(id : Long)
+POST    /rest/product               controllers.ProductRestController.addProduct
+DELETE  /rest/product/:id           controllers.ProductRestController.delete(id : Long)
+PUT     /rest/product/:id           controllers.ProductRestController.updateProduct(id : Long)
+
 # Category routes
 GET     /addcategory                 controllers.CategoryController.addCategory
 POST    /addcategoryhandle           controllers.CategoryController.addCategoryHandle

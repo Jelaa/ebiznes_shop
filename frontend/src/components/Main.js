@@ -1,12 +1,12 @@
 import React from "react";
 import {useAuth} from "../contexts/AuthContext";
-import ShopName from "./ShopName";
+import Products from "./Products";
 
 function Main() {
     const {checkIfLogged} = useAuth()
 
     return (
-        checkIfLogged() ? <ShopName /> : null
+        checkIfLogged() ? <Products /> : null
     )
 }
 
